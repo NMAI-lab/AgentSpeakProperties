@@ -8,7 +8,8 @@ Created on Tue Jun  7 16:15:23 2022
 from AgentAnalyzer import AgentAnalyzer
 
 def analyze():
-    analyzer = AgentAnalyzer()
+    path = 'C:/Users/Patrick/Documents/GitHub/AirSimNavigatingCar/asl/AgentInABox'
+    analyzer = AgentAnalyzer(path)
     analyzer.analyze()
 
 if __name__ == '__main__':

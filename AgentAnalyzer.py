@@ -5,6 +5,10 @@ Created on Tue Jun  7 16:15:23 2022
 @author: Patrick
 """
 
+from os import listdir, getcwdb
+from os.path import isfile, join
+
+
 class AgentAnalyzer:
     
     def __init__(self, path = ''):
@@ -12,6 +16,20 @@ class AgentAnalyzer:
     
     def loadAgent(self, path = ''):
         print('Loading agent code')
+        
+        if len(path) <= 0:
+            path = getcwdb()
+           
+        fileList = [f for f in listdir(path) if isfile(join(path, f))]
+        agentFiles = []
+        for file in fileList:
+            if str(file).endswith('.asl'):
+                agentFiles.append(path + file)
+        print(agentFiles)
+
+        if len(agentFiles) < 1:
+            raise FileNotFoundError('No agent files found')
+        
         return 0
 
     def getCouplingCohesionMetrics(self):
