@@ -30,8 +30,7 @@ tokens = (
   'period',
   'arrow',
   'implication',
-  'lettersLower',
-  'lettersUpper',
+  'text',
 )
  
 def MyLexer():
@@ -49,8 +48,8 @@ def MyLexer():
     t_period= r'\.'
     t_arrow = r'\<-'
     t_implication = r'\:-'
-    t_lettersLower = r'[a-z]+'
-    t_lettersUpper = r'[A-Z]+'
+    t_text = r'[a-zA-Z]+'
+
 
     # A regular expression rule with some action code
     def t_number(t):
@@ -100,15 +99,22 @@ lexer = MyLexer()
 #     'term : factor'
 #     p[0] = p[1]
      
-def p_term_lettersLower(p):
-    'term : lettersLower'
-    p[0] = str(p[1])
+class Goal(object):
+    def __init__(self, goalType, goalName):
+        self.goalType = goalType 
+        self.goalName = goalName
+    def __repr__(self):
+        return "Goal: (%r %r)" % (self.goalType, self.goalName)
 
-def p_term_lettersUpper(p):
-    'term : lettersUpper'
+def p_term_text(p):
+    'term : text'
     p[0] = str(p[1])
     
+def p_term_achievementGoal(p):
+    'term : exclamation text'
+    p[0] = Goal(str(p[1]), str(p[2]))
         
+    
 def p_error(p):
     raise TypeError("unknown text at %r" % (p.value,))
     
@@ -133,6 +139,6 @@ def p_error(p):
     
     
 yacc.yacc()
-result = yacc.parse("ab")
+result = yacc.parse("!ab")
 print(result)
 
