@@ -106,6 +106,14 @@ class Goal(object):
     def __repr__(self):
         return "Goal: (%r %r)" % (self.goalType, self.goalName)
 
+class Rule(object):
+    def __init__(self, conclusion, condition):
+        self.conclusion = conclusion 
+        self.condition = condition
+    def __repr__(self):
+        return "Rule: %r implied by %r" % (self.conclusion, self.condition)
+    
+
 def p_term_text(p):
     'term : text'
     p[0] = str(p[1])
@@ -113,6 +121,10 @@ def p_term_text(p):
 def p_term_achievementGoal(p):
     'term : exclamation text'
     p[0] = Goal(str(p[1]), str(p[2]))
+    
+def p_term_rule(p):
+    'term : text implication text period'
+    p[0] = Rule(p[1],p[3])
         
     
 def p_error(p):
@@ -139,6 +151,8 @@ def p_error(p):
     
     
 yacc.yacc()
-result = yacc.parse("!ab")
-print(result)
+goalTest = yacc.parse("!ab")
+print(goalTest)
+ruleTest = yacc.parse("conc :- cond.")
+print(ruleTest)
 
