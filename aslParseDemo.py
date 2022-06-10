@@ -16,11 +16,14 @@ rawInput = '+trigger(TriggerValue) : context(ContextValue) <- action(3).'
  
 # List of token names.   This is always required
 tokens = (
-  'number',
+  'integer',
   'plus',
   'minus',
   'times',
   'divide',
+  #'exp',
+  #'div',
+  #'mod',
   'parenLeft',
   'parenRight',
   'bracketLeft',
@@ -31,6 +34,7 @@ tokens = (
   'arrow',
   'implication',
   'text',
+  'capital'
 )
  
 def MyLexer():
@@ -39,6 +43,9 @@ def MyLexer():
     t_minus = r'-'
     t_times = r'\*'
     t_divide = r'\/'
+    #t_exp = r'\**'
+    #t_div = r'\div',
+    #t_mod = r'\mod',
     t_parenLeft = r'\('
     t_parenRight = r'\)'
     t_bracketLeft = r'\['
@@ -49,10 +56,11 @@ def MyLexer():
     t_arrow = r'\<-'
     t_implication = r'\:-'
     t_text = r'[a-zA-Z]+'
+    t_capital = r'[A-Z]'
 
 
-    # A regular expression rule with some action code
-    def t_number(t):
+
+    def t_integer(t):
         r'\d+'
         t.value = int(t.value)    
         return t
@@ -114,6 +122,15 @@ class Rule(object):
         return "Rule: %r implied by %r" % (self.conclusion, self.condition)
     
 
+    
+#class (object):
+#    def __init__(self, conclusion, condition):
+#        self.conclusion = conclusion 
+#        self.condition = condition
+#    def __repr__(self):
+#        return "Rule: %r implied by %r" % (self.conclusion, self.condition)
+    
+
 def p_term_text(p):
     'term : text'
     p[0] = str(p[1])
@@ -125,10 +142,89 @@ def p_term_achievementGoal(p):
 def p_term_rule(p):
     'term : text implication text period'
     p[0] = Rule(p[1],p[3])
+    
+
+
+def p_arithmExpressionTerm(p):
+    'term : arithmExpression'
+    p[0] = str(p[1])
+ 
+    
+# TODO: Think about how to represent this behind the scenes - if there are variables I can't run the math so I have to store it as such
+
+#def p_arithmExpression(p):
+#    '''arithmExpression : arithmTerm plus arithmTerm
+#                        | arithmTerm minus arithmTerm
+#                        | arithmTerm times arithmTerm
+#                        | arithmTerm divide arithmTerm
+#                        | arithmTerm exp arithmTerm
+#                        | arithmTerm div arithmTerm
+#                        | arithmTerm mod arithmTerm'''
+#                        
+#    if p[2] == '+':
+#        p[0] = p[1] + p[3]
+#    elif p[2] == '-':
+#        p[0] = p[1] - p[3]
+
+def p_arithmExpressionParen(p):
+    '''arithmExpression : parenLeft arithmExpression parenRight
+                        | arithmTerm'''
+    if len(p) > 2:
+        p[0] = str(p[2])
+    else:
+        p[0] = str(p[1])
+
+#def p_termArithmTerm(p):
+#    'term : arithmTerm'
+#    p[0] = str(p[1])
+    
+def p_arithmTerm(p):
+    '''arithmTerm   : variable
+                    | number
+                    | minus arithmTerm'''
+                    #| parenLeft arithmExpression parenRight'''
+
+    
+    if len(p) == 2:
+        p[0] = p[1]
+    elif len(p) == 3:
+        p[0] = 0 - float(p[2])
+    else:
+        p[0] = p[2]
+    
+    #if isinstance(p[1], int):
+    #    p[0] = int(p[1])
+    #else:
+    #    p[0] = str(p[1])
+
+
+def p_term_variable(p):
+    'variable : capital'
+    p[0] = str(p[1])
+    
+
+def p_term_varaibleLong(p):
+    'variable : capital text'
+    p[0] = str(p[1]) + str[p[2]]
         
+
+def p_number(p):
+    '''number   : integer period integer
+                | integer'''
+    if len(p) > 2:
+        fractional = float(p[3])
+        while abs(fractional) >= 1.0:
+            fractional = fractional / 10.0
+        p[0] = float(p[1]) + fractional
+    else:
+        p[0] = int(p[1])
+        
+
     
 def p_error(p):
-    raise TypeError("unknown text at %r" % (p.value,))
+    p[0] = TypeError("unknown text")# ' + str(p.value
+    
+    
     
 #def p_word_letterLower(p):
 #    'word : t_letterLower'
@@ -151,8 +247,12 @@ def p_error(p):
     
     
 yacc.yacc()
-goalTest = yacc.parse("!ab")
-print(goalTest)
-ruleTest = yacc.parse("conc :- cond.")
-print(ruleTest)
+print(yacc.parse("!ab"))
+print(yacc.parse("conc :- cond."))
+print(yacc.parse("V"))
+print(yacc.parse("Variable"))
+print(yacc.parse("-4.126485431"))
+print(yacc.parse("4.126485431"))
+#print(yacc.parse("-(-4.126485431)"))
+#print(yacc.parse("5 + 10"))
 
