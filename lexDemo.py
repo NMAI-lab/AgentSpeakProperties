@@ -53,3 +53,16 @@ def t_error(t):
  
 # Build the lexer
 lexer = lex.lex()
+
+# Test it out
+data = '''
+3 + 4 * 10
+  + -20 *2
+'''
+ 
+# Give the lexer some input
+lexer.input(data)
+ 
+for tok in lexer:
+    print(tok)
+    
