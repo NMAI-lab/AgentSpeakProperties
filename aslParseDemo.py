@@ -150,6 +150,16 @@ def p_arithmExpressionTerm(p):
     p[0] = str(p[1])
  
     
+ 
+# TODO: Think about what I really need: I need to identify:
+#   achievement goal functors
+#   Terms in logical expressions
+#   number of concerns
+#   number of connected components
+#   number of steps in a plan body
+# I DON't NEED THE WHOLE EBNF FOR THAT
+    
+ 
 # TODO: Think about how to represent this behind the scenes - if there are variables I can't run the math so I have to store it as such
 
 #def p_arithmExpression(p):
