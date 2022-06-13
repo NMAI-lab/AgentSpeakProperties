@@ -29,6 +29,7 @@ tokens = (
   'bracketLeft',
   'bracketRight',
   'exclamation',
+  'question',
   'colon',
   'period',
   'arrow',
@@ -51,6 +52,7 @@ def MyLexer():
     t_bracketLeft = r'\['
     t_bracketRight = r'\]'
     t_exclamation = r'\!'
+    t_question = r'\?'
     t_colon = r'\:'
     t_period= r'\.'
     t_arrow = r'\<-'
@@ -108,6 +110,10 @@ lexer = MyLexer()
 #     p[0] = p[1]
      
 class Goal(object):
+    def __init__(self, otherGoal):
+        self.goalName = otherGoal.goalName
+        self.goalType = otherGoal.goalType
+    
     def __init__(self, goalType, goalName):
         self.goalType = goalType 
         self.goalName = goalName
@@ -121,7 +127,20 @@ class Rule(object):
     def __repr__(self):
         return "Rule: %r implied by %r" % (self.conclusion, self.condition)
     
+class Plan(object):
+    def __init__(self, goal, context, body):
+        self.goal = goal
+        self.context = context
+        self.body = body
+    def __repr__(self):
+        return "Plan \n %r \n Plan Context: %r \n Plan Body: %r \n" % (self.goal, self.context, self.body)
 
+class Predicate(object):
+    def __init__(self, functor, parameters):
+        self.functor = functor
+        self.parameters = parameters
+    def __repr__(self):
+        return "Predicate: %r (%r)" % (self.functor, self.parameters)
     
 #class (object):
 #    def __init__(self, conclusion, condition):
@@ -129,21 +148,35 @@ class Rule(object):
 #        self.condition = condition
 #    def __repr__(self):
 #        return "Rule: %r implied by %r" % (self.conclusion, self.condition)
-    
+
 
 def p_term_text(p):
     'term : text'
     p[0] = str(p[1])
     
-def p_term_achievementGoal(p):
-    'term : exclamation text'
+
+def p_goal(p):
+    '''goal  : exclamation text
+             | question text'''
     p[0] = Goal(str(p[1]), str(p[2]))
+
+def t_predicate(p):
+    'term : text parenLeft text parenRight'
+    p[0] = Predicate(p[1],p[3])
     
-def p_term_rule(p):
+    
+def p_rule(p):
     'term : text implication text period'
     p[0] = Rule(p[1],p[3])
     
 
+def p_plan(p):
+    '''
+    term : goal colon text arrow text period
+    '''
+    
+    p[0] = Plan(p[1], p[3], p[5])
+    
 
 def p_arithmExpressionTerm(p):
     'term : arithmExpression'
@@ -232,7 +265,7 @@ def p_number(p):
 
     
 def p_error(p):
-    p[0] = TypeError("unknown text")# ' + str(p.value
+    raise TypeError("unknown text at %r" % (p.value,))
     
     
     
@@ -257,12 +290,15 @@ def p_error(p):
     
     
 yacc.yacc()
-print(yacc.parse("!ab"))
-print(yacc.parse("conc :- cond."))
-print(yacc.parse("V"))
-print(yacc.parse("Variable"))
-print(yacc.parse("-4.126485431"))
-print(yacc.parse("4.126485431"))
+#print(yacc.parse("!ab"))
+#print(yacc.parse('!ab : meow <- cat.'))
+#print(yacc.parse('conc :- cond.'))
+print(yacc.parse('functor(parameter)'))
+#print(yacc.parse("V"))
+#print(yacc.parse("Variable"))
+#print(yacc.parse("-4.126485431"))
+#print(yacc.parse("4.126485431"))
+
 #print(yacc.parse("-(-4.126485431)"))
 #print(yacc.parse("5 + 10"))
 
