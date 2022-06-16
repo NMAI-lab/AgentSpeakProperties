@@ -35,7 +35,12 @@ tokens = (
   'arrow',
   'implication',
   'text',
-  'capital'
+  'capital',
+  'commentLine',
+  'commentBlockStart',
+  'commentBlockEnd',
+  'anyTextLine',
+  'anyTextMultiLine'
 )
  
 def MyLexer():
@@ -59,6 +64,11 @@ def MyLexer():
     t_implication = r'\:-'
     t_text = r'[a-zA-Z]+'
     t_capital = r'[A-Z]'
+    t_commentLine = r'//'
+    t_commentBlockStart = r'/*'
+    t_commentBlockEnd = r'*/'
+    t_anyTestLine = r'[a-zA-Z]+'
+    t_anyTextMultiLine = r'((.|\n)*)'
 
 
 

@@ -10,11 +10,13 @@ from os.path import isfile, join
 
 import ply.lex as lex
 
+from AgentCode import AgentCode
+
 
 class AgentAnalyzer:
     
     def __init__(self, path = ''):
-        self.agentCode = []
+        self.agentCode = AgentCode()
         self.loadAgent(path)
     
     def loadAgent(self, path = ''):
@@ -24,8 +26,8 @@ class AgentAnalyzer:
         
         for filePath in agentFiles:
             with open(filePath, 'r') as file:
-                self.agentCode.append(file.read())
-        print(self.agentCode)
+                self.agentCode.addCode(file.read())
+
         
     def getAgentFilePaths(self, path = ''):
         if len(path) <= 0:
@@ -47,7 +49,25 @@ class AgentAnalyzer:
 
     def getCouplingCohesionMetrics(self):
         print('Get coupling and cohesion metrics')
-        triggerList = self.getTriggerList()
+        plans = self.agentCode.plans
+        (triggers, triggerUse) = self.getPlansPerEvent(plans)
+
+        print((triggers, triggerUse))
+
+        
+    def getPlansPerEvent(self,plans):
+        triggerList = []
+        useList = []
+        for plan in plans:
+            triggerFunctor = plan.trigger.functor
+            if triggerFunctor in triggerList:
+                i = triggerList.index(triggerFunctor)
+                useList[i] = useList[i] + 1
+            else:
+                triggerList.append(triggerFunctor)
+                useList.append(1)
+        return(triggerList,useList)
+            
     
     def getNodeGraphs(self):
         print('Get node graphs')
@@ -58,14 +78,7 @@ class AgentAnalyzer:
         print('Get cyclomatic complexity metric')
         return 0
     
-    def getTriggerList(self):
-        triggers = []
-        for codeBlock in self.agentCode:
-            for line in codeBlock:
-                if '+' in line:
-                    triggers.append(line)
-                    print(line)
-        return triggers
+
     
     def printReport(self, couplingCohesion, complexity):
         print('--- Agent analysis Report ---')
