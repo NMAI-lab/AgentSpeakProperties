@@ -11,6 +11,7 @@ from os.path import isfile, join
 import ply.lex as lex
 
 from AgentCode import AgentCode
+from PlanGraph import PlanGraph
 
 
 class AgentAnalyzer:
@@ -20,7 +21,6 @@ class AgentAnalyzer:
         self.loadAgent(path)
     
     def loadAgent(self, path = ''):
-        print('Loading agent code')
         agentFiles = self.getAgentFilePaths(path)
         
         
@@ -40,7 +40,6 @@ class AgentAnalyzer:
         for file in fileList:
             if str(file).endswith('.asl'):
                 agentFiles.append(path + file)
-        print(agentFiles)
 
         if len(agentFiles) < 1:
             raise FileNotFoundError('No agent files found')
@@ -60,7 +59,7 @@ class AgentAnalyzer:
         contextMetrics = []
         
         for plan in plans:
-            trigger = plan.trigger
+            trigger = plan.trigger.functor
             contextMetric = plan.context.numExpressionsJoinedByConjunction()
             if not trigger in triggers:
                 triggers.append(trigger)
@@ -78,8 +77,8 @@ class AgentAnalyzer:
         triggers = []
         subGoals = []
         for plan in plans:
-            trigger = plan.trigger
-            subGoals = plan.body.getSubGoals()
+            trigger = plan.trigger.functor
+            subGoals.append(plan.body.getSubGoals())
             
             if not trigger in triggers:
                 triggers.append(trigger)
@@ -92,10 +91,6 @@ class AgentAnalyzer:
                     if not goal in currentGoals:
                         currentGoals.append(goal)
         return (triggers, subGoals)
-                
-                    
-            
-
         
     def getPlansPerEvent(self):
         plans = self.agentCode.plans
@@ -113,9 +108,13 @@ class AgentAnalyzer:
             
     
     def getNodeGraphs(self):
-        print('Get node graphs')
-    
-        print('Save node graphs')
+        plans = self.agentCode.plans
+        triggers = set([plan.trigger.functor for plan in plans])
+        ruleConclusions = [rule.conclusion for rule in self.agentCode.rules]
+        planGraphs = [PlanGraph(trigger, plans, ruleConclusions) for trigger in triggers]
+        
+        print('Save node graphs?')
+        return planGraphs
     
     def getAgentCyclomaticComplexity(self):
         print('Get cyclomatic complexity metric')
