@@ -21,8 +21,12 @@ class PlanGraph:
         
         self.buildGraph()
       
-        
+    
+    
     # TODO DEBUG THIS METHOD!!!!!
+    
+    # Need to count the edges, nodes, and connected components as I build the graph
+    
     def buildGraph(self):
         dot = graphviz.Digraph(comment = self.trigger)
         
