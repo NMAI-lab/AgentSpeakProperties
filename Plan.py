@@ -16,8 +16,6 @@ class Plan:
         self.setContext(raw)
         self.setBody(raw)
         
-
-        
         
     def setTrigger(self,raw):
         if ':' in raw:
@@ -61,6 +59,15 @@ class Context:
     def __init__(self,raw):
         self.parameters = raw
         
+    def numExpressionsJoinedByConjunction(self):
+        if len(self.parameters) > 0:
+            if '&' in self.parameters:
+                return len(self.parameters.split('&'))
+            else:
+                return 1
+        else:
+            return -1    
+        
 class Body:
     def __init__(self,raw):
         
@@ -76,3 +83,12 @@ class Body:
             lastStep = self.steps[len(self.steps)-1]
             lastStep = lastStep[:-1]
             self.steps[len(self.steps)-1] = lastStep
+
+    def getSubGoals(self):
+        subGoals = []
+        for step in self.steps:
+            if '!' in step or '?' in step:
+                subGoal = step.split('(')[0]
+                if not subGoal in subGoals:
+                    subGoals.append(step)
+        return subGoals   

@@ -47,15 +47,58 @@ class AgentAnalyzer:
         
         return agentFiles
 
-    def getCouplingCohesionMetrics(self):
-        print('Get coupling and cohesion metrics')
-        plans = self.agentCode.plans
-        (triggers, triggerUse) = self.getPlansPerEvent(plans)
+    def getCouplingCohesionParameters(self):
+        (triggers, plansPerTrigger) = self.getPlansPerEvent()
+        (contextTriggers, contextMetrics) = self.getContextMetrics()
+        (subGoalTriggers, subGoals) = self.getSubGoalList()
 
-        print((triggers, triggerUse))
+        return ((triggers, plansPerTrigger), (contextTriggers, contextMetrics), (subGoalTriggers, subGoals))
+
+    def getContextMetrics(self):
+        plans = self.agentCode.plans
+        triggers = []
+        contextMetrics = []
+        
+        for plan in plans:
+            trigger = plan.trigger
+            contextMetric = plan.context.numExpressionsJoinedByConjunction()
+            if not trigger in triggers:
+                triggers.append(trigger)
+                contextMetrics.append([contextMetric])
+            else:
+                i = triggers.index(trigger)
+                contextMetrics[i].append(contextMetric)
+        return (triggers, contextMetric)                
+        
 
         
-    def getPlansPerEvent(self,plans):
+
+    def getSubGoalList(self):
+        plans = self.agentCode.plans
+        triggers = []
+        subGoals = []
+        for plan in plans:
+            trigger = plan.trigger
+            subGoals = plan.body.getSubGoals()
+            
+            if not trigger in triggers:
+                triggers.append(trigger)
+                subGoals.append(plan.body.getSubGoals())
+            else:
+                i = triggers.index(trigger)
+                currentGoals = subGoals[i]
+                
+                for goal in subGoals:
+                    if not goal in currentGoals:
+                        currentGoals.append(goal)
+        return (triggers, subGoals)
+                
+                    
+            
+
+        
+    def getPlansPerEvent(self):
+        plans = self.agentCode.plans
         triggerList = []
         useList = []
         for plan in plans:
@@ -86,7 +129,7 @@ class AgentAnalyzer:
         print('Cyclomatic Complexity: ' + str(complexity))
 
     def analyze(self):
-        metrics = self.getCouplingCohesionMetrics()
+        metrics = self.getCouplingCohesionParameters()
         self.getNodeGraphs()
         complexity = self.getAgentCyclomaticComplexity()
         self.printReport(metrics, complexity)
