@@ -8,23 +8,23 @@ Created on Tue Jun  7 16:15:23 2022
 from os import listdir, getcwdb
 from os.path import isfile, join
 
-import ply.lex as lex
-
 from AgentCode import AgentCode
 from PlanGraph import PlanGraph
 
 
 class AgentAnalyzer:
     
-    def __init__(self, path = ''):
+    def __init__(self, files = [''], name = '', connectionBias = []):
         self.agentCode = AgentCode()
-        self.loadAgent(path)
+        self.loadAgent(files)
+        self.name = name
+        self.connectionBias = connectionBias
     
-    def loadAgent(self, path = ''):
-        agentFiles = self.getAgentFilePaths(path)
+    def loadAgent(self, files = ['']):
+        #agentFiles = self.getAgentFilePaths(files)
         
         
-        for filePath in agentFiles:
+        for filePath in files:
             with open(filePath, 'r') as file:
                 self.agentCode.addCode(file.read())
 
@@ -68,7 +68,6 @@ class AgentAnalyzer:
                 i = triggers.index(trigger)
                 contextMetrics[i].append(contextMetric)
         return (triggers, contextMetric)                
-        
 
         
 
@@ -111,25 +110,54 @@ class AgentAnalyzer:
         plans = self.agentCode.plans
         triggers = set([plan.trigger.functor for plan in plans])
         ruleConclusions = [rule.conclusion for rule in self.agentCode.rules]
-        planGraphs = [PlanGraph(trigger, plans, ruleConclusions) for trigger in triggers]
-        
-        print('Save node graphs?')
+        planGraphs = [PlanGraph(trigger, plans, ruleConclusions, self.name) for trigger in triggers]
         return planGraphs
     
-    def getAgentCyclomaticComplexity(self):
-        print('Get cyclomatic complexity metric')
-        return 0
+    def calculateCyclomaticComplexity(self, numNodes, numEdges, numConnectedComonenets):
+        return numEdges - numNodes + (2 * numConnectedComonenets)
+    
+    def getAgentCyclomaticComplexity(self, planGraphs):
+        triggers = []
+        numEdges = []
+        numNodes = []
+        rulesUsed = []
+        beliefsMaintained = []
+        goalsUsed = []
+        cyclomaticComplexity = []
+        connectionBias = []
+        for graph in planGraphs:
+            triggers.append(graph.trigger)
+            numEdges.append(graph.getNumEdges())
+            numNodes.append(graph.getNumNodes())
+            rulesUsed.append(graph.getRulesUsed())
+            beliefsMaintained.append(graph.getBeliefsMaintained())
+            goalsUsed.append(graph.getGoalsUsed())
+            connectionBias.append(self.connectionBias)
+            connectedComponents = len(graph.getGoalsUsed()) + len(graph.getBeliefsMaintained()) + len(graph.getRulesUsed()) + len(self.connectionBias)            
+            cyclomaticComplexity.append(self.calculateCyclomaticComplexity(graph.getNumNodes(), graph.getNumEdges(), connectedComponents))
+        return (triggers, numEdges, numNodes, rulesUsed, beliefsMaintained, goalsUsed, connectionBias)
     
 
-    
+    # TODO: Print a pretty report
+    def printCouplingCohesionReport(self, couplingCohesion):
+        print('Coupling and Cohesion Report')
+        print(str(couplingCohesion))
+
+    # TODO: Print a pretty report
+    def printCyclomaticComplexityReport(self, complexity):
+         print('Cyclomatic Complexity Report')
+         print(str(complexity))
+
+
     def printReport(self, couplingCohesion, complexity):
-        print('--- Agent analysis Report ---')
-        print('Coupling and Cohesion: ' + str(couplingCohesion))
-        print('Cyclomatic Complexity: ' + str(complexity))
+        print('--- Agent analysis Report: ' + self.name + ' version ---')
+        self.printCouplingCohesionReport(couplingCohesion)
+        self.printCyclomaticComplexityReport(complexity)
+
 
     def analyze(self):
         metrics = self.getCouplingCohesionParameters()
-        self.getNodeGraphs()
-        complexity = self.getAgentCyclomaticComplexity()
+        graphs = self.getNodeGraphs()
+        complexity = self.getAgentCyclomaticComplexity(graphs)
         self.printReport(metrics, complexity)
         

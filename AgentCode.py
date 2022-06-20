@@ -47,6 +47,22 @@ class AgentCode:
                 commentFreeCode = commentFreeCode + '\n' + cleanLine
         
         return commentFreeCode
+    
+    def removeDebugMessages(self,code):
+        lines = code.split('\n')
+        debugFreeCode = ''
+        
+        for line in lines:
+            if '.broadcast' in line:
+                if line.endswith('.'):
+                    debugFreeCode = debugFreeCode + '.'
+            else:
+                debugFreeCode = debugFreeCode + '\n' + line
+       
+        return debugFreeCode
+    
+    
+        
   
     def removeIncludes(self,code):
         cleanCode = ''
@@ -77,10 +93,15 @@ class AgentCode:
         lines = code.split('\n')
         
         inRule = False
+        i = 0
         for line in lines:
             if ':-' in line:
                 inRule = True
-                ruleLine = ''
+                if line.split(':-')[0].isspace():
+                    ruleLine = lines[i-1]
+                else:
+                    ruleLine = ''                    
+                    
             
             if inRule and len(line) > 0:
                 ruleLine += line
@@ -88,4 +109,5 @@ class AgentCode:
                 if line.replace(' ','').endswith('.'):
                     inRule = False
                     self.rules.append(Rule(ruleLine))
+            i += 1
         

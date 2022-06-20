@@ -70,19 +70,31 @@ class Context:
         
 class Body:
     def __init__(self,raw):
+        self.steps = []
+        
+        raw = raw.replace(';}','};')
         
         if len(raw) == 0:
-            self.steps = ''
+            steps = ''
         elif ';' in raw:
-            self.steps = raw.split(';')
+            steps = raw.split(';')
         else:
-            self.steps = [raw]
+            steps = [raw]
         
         # Drop last period
-        if len(self.steps) > 0:
-            lastStep = self.steps[len(self.steps)-1]
+        if len(steps) > 0:
+            lastStep = steps[len(steps)-1]
             lastStep = lastStep[:-1]
-            self.steps[len(self.steps)-1] = lastStep
+            steps[len(steps)-1] = lastStep
+
+            for step in steps:
+                if not('.broadcast' in step) and len(step) > 0:
+                    self.steps.append(step)
+        else:
+            self.steps = ['']
+        
+            
+        
 
     def getSubGoals(self):
         subGoals = []
