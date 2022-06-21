@@ -11,6 +11,8 @@ from os.path import isfile, join
 from AgentCode import AgentCode
 from PlanGraph import PlanGraph
 
+from tabulate import tabulate
+
 
 class AgentAnalyzer:
     
@@ -53,6 +55,8 @@ class AgentAnalyzer:
 
         return ((triggers, plansPerTrigger), (contextTriggers, contextMetrics), (subGoalTriggers, subGoals))
 
+    
+    # TODO: dig into this method
     def getContextMetrics(self):
         plans = self.agentCode.plans
         triggers = []
@@ -67,7 +71,7 @@ class AgentAnalyzer:
             else:
                 i = triggers.index(trigger)
                 contextMetrics[i].append(contextMetric)
-        return (triggers, contextMetric)                
+        return (triggers, contextMetrics)                
 
         
 
@@ -125,6 +129,7 @@ class AgentAnalyzer:
         goalsUsed = []
         cyclomaticComplexity = []
         connectionBias = []
+        connectedComponentsList = []
         for graph in planGraphs:
             triggers.append(graph.trigger)
             numEdges.append(graph.getNumEdges())
@@ -134,19 +139,35 @@ class AgentAnalyzer:
             goalsUsed.append(graph.getGoalsUsed())
             connectionBias.append(self.connectionBias)
             connectedComponents = len(graph.getGoalsUsed()) + len(graph.getBeliefsMaintained()) + len(graph.getRulesUsed()) + len(self.connectionBias)            
+            connectedComponentsList.append(connectedComponents)
             cyclomaticComplexity.append(self.calculateCyclomaticComplexity(graph.getNumNodes(), graph.getNumEdges(), connectedComponents))
-        return (triggers, numEdges, numNodes, rulesUsed, beliefsMaintained, goalsUsed, connectionBias)
+        return (triggers, numEdges, numNodes, rulesUsed, beliefsMaintained, goalsUsed, connectionBias, connectedComponentsList, cyclomaticComplexity)
     
 
     # TODO: Print a pretty report
     def printCouplingCohesionReport(self, couplingCohesion):
+        ((triggers, plansPerTrigger), (_, contextMetrics), (_, subGoals)) = couplingCohesion
+        rows = []
+        while len(triggers) > 0:
+            rows.append([triggers.pop(), plansPerTrigger.pop(), contextMetrics.pop(), subGoals.pop()])
         print('Coupling and Cohesion Report')
-        print(str(couplingCohesion))
+        print(tabulate(rows, headers=['Triggers', 'PlansPerTrigger', 'contextMetrics', 'subGoals']))
 
     # TODO: Print a pretty report
     def printCyclomaticComplexityReport(self, complexity):
+         (triggers, numEdges, numNodes, rulesUsed, beliefsMaintained, goalsUsed, connectionBias, connectedComponents, cyclomaticComplexity) = complexity
+         rows = []
+         while len(triggers) > 0:
+             rows.append([triggers.pop(), numEdges.pop(), numNodes.pop(), 
+                          rulesUsed.pop(), beliefsMaintained.pop(), 
+                          goalsUsed.pop(), connectionBias.pop(), 
+                          connectedComponents.pop(), cyclomaticComplexity.pop()])
          print('Cyclomatic Complexity Report')
-         print(str(complexity))
+         print(tabulate(rows, headers=['triggers', 'numEdges', 'numNodes', 
+                                       'rulesUsed', 'beliefsMaintained', 
+                                       'goalsUsed', 'connectionBias',
+                                       'connectedComponents', 
+                                       'cyclomaticComplexity']))
 
 
     def printReport(self, couplingCohesion, complexity):
