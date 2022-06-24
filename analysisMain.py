@@ -7,7 +7,15 @@ Created on Tue Jun  7 16:15:23 2022
 
 from AgentAnalyzer import AgentAnalyzer
 
+import shutil
+
 def analyze():
+    
+    try:
+        shutil.rmtree('output')
+    except OSError as e:
+        print("Error: %s - %s." % (e.filename, e.strerror))
+    
     files = ['C:/Users/Patrick/Documents/GitHub/AirSimNavigatingCar/asl/AgentInABox/steeringController.asl',
                   'C:/Users/Patrick/Documents/GitHub/AirSimNavigatingCar/asl/AgentInABox/carController.asl',
                   'C:/Users/Patrick/Documents/GitHub/AirSimNavigatingCar/asl/AgentInABox/a_star.asl',
@@ -43,7 +51,6 @@ def analyze():
     connectionBias = []
     analyzer = AgentAnalyzer(files, agentType, connectionBias)
     analyzer.analyze()
-    
     
 
 if __name__ == '__main__':

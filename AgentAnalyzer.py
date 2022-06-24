@@ -181,8 +181,7 @@ class AgentAnalyzer:
     def saveReport(self, rows, headdings, fileName):
         import csv
         with open('output/' + fileName + '.csv', 'w', newline='') as csvfile:
-            spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', 
-                                    quoting=csv.QUOTE_MINIMAL)
+            spamwriter = csv.writer(csvfile)
             spamwriter.writerow(headdings)
             for row in rows:
                 spamwriter.writerow(row)
