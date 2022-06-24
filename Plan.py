@@ -66,7 +66,7 @@ class Context:
             else:
                 return 1
         else:
-            return -1    
+            return 0    
         
 class Body:
     def __init__(self,raw):

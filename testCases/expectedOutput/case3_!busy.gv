@@ -1,0 +1,6 @@
+// !busy
+digraph {
+	0 [label="!busy"]
+	-1 [label="Plan Exit"]
+	0 -> 0
+}

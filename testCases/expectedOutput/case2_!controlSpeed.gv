@@ -1,0 +1,18 @@
+// !controlSpeed
+digraph {
+	0 [label="!controlSpeed"]
+	-1 [label="Plan Exit"]
+	1 [label="-speedSetting(_)"]
+	0 -> 1
+	2 [label="+speedSetting(Speed)"]
+	1 -> 2
+	3 [label="setSpeed(Speed)"]
+	2 -> 3
+	3 -> -1
+	4 [label="+speedSetting(Speed)"]
+	0 -> 4
+	5 [label="setSpeed(Speed)"]
+	4 -> 5
+	5 -> -1
+	0 -> -1
+}

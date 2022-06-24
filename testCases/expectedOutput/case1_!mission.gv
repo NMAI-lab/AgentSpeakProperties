@@ -1,0 +1,12 @@
+// !mission
+digraph {
+	0 [label="!mission"]
+	-1 [label="Plan Exit"]
+	1 [label="+mission(Goal,Parameters)"]
+	0 -> 1
+	2 [label="!navigate(Destination)"]
+	1 -> 2
+	3 [label="-mission(Goal,Parameters)"]
+	2 -> 3
+	3 -> -1
+}

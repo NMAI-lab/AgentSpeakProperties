@@ -151,7 +151,9 @@ class AgentAnalyzer:
         while len(triggers) > 0:
             rows.append([triggers.pop(), plansPerTrigger.pop(), contextMetrics.pop(), subGoals.pop()])
         print('Coupling and Cohesion Report')
-        print(tabulate(rows, headers=['Triggers', 'PlansPerTrigger', 'contextMetrics', 'subGoals']))
+        headers = ['Triggers', 'PlansPerTrigger', 'contextMetrics', 'subGoals']
+        print(tabulate(rows, headers = headers))
+        self.saveReport(rows, headers, str(self.name) + '_CouplingCohesionReport')
 
     # TODO: Print a pretty report
     def printCyclomaticComplexityReport(self, complexity):
@@ -161,19 +163,29 @@ class AgentAnalyzer:
              rows.append([triggers.pop(), numEdges.pop(), numNodes.pop(), 
                           rulesUsed.pop(), beliefsMaintained.pop(), 
                           goalsUsed.pop(), connectionBias.pop(), 
-                          connectedComponents.pop(), cyclomaticComplexity.pop()])
+                          connectedComponents.pop(), cyclomaticComplexity.pop()]) 
+         headers = ['triggers', 'numEdges', 'numNodes', 'rulesUsed', 
+                   'beliefsMaintained', 'goalsUsed', 'connectionBias',
+                                      'connectedComponents',
+                                      'cyclomaticComplexity']
          print('Cyclomatic Complexity Report')
-         print(tabulate(rows, headers=['triggers', 'numEdges', 'numNodes', 
-                                       'rulesUsed', 'beliefsMaintained', 
-                                       'goalsUsed', 'connectionBias',
-                                       'connectedComponents', 
-                                       'cyclomaticComplexity']))
-
+         print(tabulate(rows, headers = headers))
+         self.saveReport(rows, headers, str(self.name) + '_CyclomaticComplexity')
 
     def printReport(self, couplingCohesion, complexity):
         print('--- Agent analysis Report: ' + self.name + ' version ---')
         self.printCouplingCohesionReport(couplingCohesion)
         self.printCyclomaticComplexityReport(complexity)
+        
+        
+    def saveReport(self, rows, headdings, fileName):
+        import csv
+        with open('output/' + fileName + '.csv', 'w', newline='') as csvfile:
+            spamwriter = csv.writer(csvfile)
+            spamwriter.writerow(headdings)
+            for row in rows:
+                spamwriter.writerow(row)
+
 
 
     def analyze(self):
