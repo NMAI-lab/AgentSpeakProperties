@@ -94,6 +94,7 @@ class PlanGraph:
     def addPlanToGraph(self, plan):
         firstStep = True
         needExit = True
+               
         if len(plan.body.steps) > 0:
             for step in plan.body.steps:                
                 if len(step) > 0:
