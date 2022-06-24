@@ -1,0 +1,5 @@
+triggers,numEdges,numNodes,rulesUsed,beliefsMaintained,goalsUsed,connectionBias,connectedComponents,cyclomaticComplexity
+!controlSpeed,8,7,set(),{'speedSetting'},set(),[],1,3
+!mission,2,3,set(),set(),{'!waypoint'},[],1,1
+!waypoint,12,9,"{'nearLocation', 'atLocation'}",set(),"{'!controlSteering', '!controlSpeed'}",[],4,11
+!controlSteering,5,4,"{'steeringSetting', 'lkaSteering'}",set(),set(),[],2,5

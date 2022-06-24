@@ -1,0 +1,7 @@
+// navigate
+digraph {
+	0 [label=navigate]
+	-1 [label="Plan Exit"]
+	0 -> -1
+	0 -> -1
+}

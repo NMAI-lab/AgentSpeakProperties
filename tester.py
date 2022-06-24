@@ -109,14 +109,14 @@ def test():
                   'testCases/case1Input/speedController.asl']
     agentType = 'case1'
     connectionBias = ['Prioritization']
-    expectedOutputFiles = ['testCases/output/case1_!controlSpeed.gv', 
-                           'testCases/output/case1_!controlSteering.gv',
-                           'testCases/output/case1_!mission.gv',
-                           'testCases/output/case1_!navigate.gv',
-                           'testCases/output/case1_!waypoint.gv',
-                           'testCases/output/case1_CouplingCohesionReport.csv',
-                           'testCases/output/case1_CyclomaticComplexity.csv',
-                           'testCases/output/case1_obstacle.gv']
+    expectedOutputFiles = ['testCases/expectedOutput/case1_!controlSpeed.gv', 
+                           'testCases/expectedOutput/case1_!controlSteering.gv',
+                           'testCases/expectedOutput/case1_!mission.gv',
+                           'testCases/expectedOutput/case1_!navigate.gv',
+                           'testCases/expectedOutput/case1_!waypoint.gv',
+                           'testCases/expectedOutput/case1_CouplingCohesionReport.csv',
+                           'testCases/expectedOutput/case1_CyclomaticComplexity.csv',
+                           'testCases/expectedOutput/case1_obstacle.gv']
     actualOutputFiles = ['output/case1_!controlSpeed.gv', 
                          'output/case1_!controlSteering.gv',
                          'output/case1_!mission.gv',
@@ -137,12 +137,12 @@ def test():
                   'testCases/case2Input/steeringController.asl']
     agentType = 'case2'
     connectionBias = []
-    expectedOutputFiles = ['testCases/output/case2_!controlSpeed.gv',
-                           'testCases/output/case2_!controlSteering.gv',
-                           'testCases/output/case2_!mission.gv',
-                           'testCases/output/case2_!waypoint.gv',
-                           'testCases/output/case2_CouplingCohesionReport.csv',
-                           'testCases/output/case2_CyclomaticComplexity.csv']
+    expectedOutputFiles = ['testCases/expectedOutput/case2_!controlSpeed.gv',
+                           'testCases/expectedOutput/case2_!controlSteering.gv',
+                           'testCases/expectedOutput/case2_!mission.gv',
+                           'testCases/expectedOutput/case2_!waypoint.gv',
+                           'testCases/expectedOutput/case2_CouplingCohesionReport.csv',
+                           'testCases/expectedOutput/case2_CyclomaticComplexity.csv']
     actualOutputFiles = ['output/case2_!controlSpeed.gv',
                          'output/case2_!controlSteering.gv',
                          'output/case2_!mission.gv',
@@ -160,12 +160,12 @@ def test():
                   'testCases/case3Input/steeringController.asl']
     agentType = 'case3'
     connectionBias = []
-    expectedOutputFiles = ['testCases/output/case3_!busy.gv',
-                           'testCases/output/case3_!mission.gv',
-                           'testCases/output/case3_CouplingCohesionReport.csv',
-                           'testCases/output/case3_CyclomaticComplexity.csv',
-                           'testCases/output/case3_navigate.gv',
-                           'testCases/output/case3_obstacle.gv']
+    expectedOutputFiles = ['testCases/expectedOutput/case3_!busy.gv',
+                           'testCases/expectedOutput/case3_!mission.gv',
+                           'testCases/expectedOutput/case3_CouplingCohesionReport.csv',
+                           'testCases/expectedOutput/case3_CyclomaticComplexity.csv',
+                           'testCases/expectedOutput/case3_navigate.gv',
+                           'testCases/expectedOutput/case3_obstacle.gv']
     actualOutputFiles = ['output/case3_!busy.gv',
                          'output/case3_!mission.gv',
                          'output/case3_CouplingCohesionReport.csv',

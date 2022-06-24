@@ -1,0 +1,7 @@
+triggers,numEdges,numNodes,rulesUsed,beliefsMaintained,goalsUsed,connectionBias,connectedComponents,cyclomaticComplexity
+!controlSpeed,8,7,set(),{'speedSetting'},set(),['Prioritization'],2,5
+!waypoint,10,8,"{'nearLocation', 'atLocation'}",set(),"{'!controlSteering', '!controlSpeed'}",['Prioritization'],5,12
+obstacle,3,3,set(),set(),{'!controlSpeed'},['Prioritization'],2,4
+!navigate,5,4,"{'nearestLocation', 'atLocation'}",set(),"{'?a_star', 'for'}",['Prioritization'],5,11
+!mission,4,5,set(),{'mission'},{'!navigate'},['Prioritization'],3,5
+!controlSteering,5,4,"{'steeringSetting', 'lkaSteering'}",set(),set(),['Prioritization'],3,7

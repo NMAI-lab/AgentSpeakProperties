@@ -1,0 +1,12 @@
+// !navigate
+digraph {
+	0 [label="!navigate"]
+	-1 [label="Plan Exit"]
+	0 -> -1
+	1 [label="?a_star(Current,Destination,Solution,Cost)"]
+	0 -> 1
+	2 [label="for(.member(op(drive,NextPosition),Solution)){!waypoint(NextPosition)}"]
+	1 -> 2
+	2 -> 0
+	0 -> -1
+}
