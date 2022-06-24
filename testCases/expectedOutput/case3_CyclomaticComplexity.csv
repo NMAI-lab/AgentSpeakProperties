@@ -1,5 +1,5 @@
 triggers,numEdges,numNodes,rulesUsed,beliefsMaintained,goalsUsed,connectionBias,connectedComponents,cyclomaticComplexity
 !busy,1,2,set(),set(),set(),[],0,-1
 !mission,2,3,set(),{'navigate'},set(),[],1,1
-obstacle,11,8,"{'steeringSetting', 'nearLocation', 'atLocation', 'lkaSteering'}",set(),set(),[],4,11
+obstacle,14,10,"{'steeringSetting', 'nearLocation', 'atLocation', 'lkaSteering'}",set(),set(),[],4,12
 navigate,2,2,set(),set(),set(),[],0,0

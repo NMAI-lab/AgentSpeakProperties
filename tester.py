@@ -98,7 +98,7 @@ def test():
         print("Error: %s - %s." % (e.filename, e.strerror))   
      
     errorCount = 0   
-     
+
     inputFiles = ['testCases/case1Input/steeringController.asl',
                   'testCases/case1Input/carController.asl',
                   'testCases/case1Input/a_star.asl',
@@ -176,7 +176,7 @@ def test():
                              expectedOutputFiles, actualOutputFiles)
     
     print('--- Test completed with ' + str(errorCount) + ' errors. ---')
-    
+
 
 if __name__ == '__main__':
     test()
